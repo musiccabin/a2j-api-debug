@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { TextField, IconButton, InputAdornment } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import "../../App.css";
-import { styled } from '@material-ui/core/styles';
+// import { styled } from '@material-ui/core/styles';
 
 // const SearchBox = styled(TextField)(() => ({
 //   '& fieldset': {
@@ -32,12 +32,12 @@ function App() {
             label="Type your question or keywords here"
             onChange={e => handleChange(e)}
             onKeyPress={(e) => {
-              if (e.key === 'Enter') navigate("/results", {state:{phrase:phrase, from: 'Search'}})
+              if (e.key === 'Enter') navigate(`/results/${phrase}`, {state:{phrase:phrase, from: 'Search'}})
             }}
             InputProps={{
               endAdornment: (
                 <InputAdornment>
-                  <IconButton onClick={() => navigate("/results", {state:{phrase:phrase, from: 'Search'}})}>
+                  <IconButton onClick={() => navigate(`/results/${phrase}`, {state:{phrase:phrase, from: 'Search'}})}>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>

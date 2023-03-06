@@ -140,18 +140,6 @@ export default function Tags({tags, allResults}) {
                         </div>
                     </div>
                 </Modal>
-                <div>
-                    <Button
-                        variant="outlined"
-                        style={{height: '2.5em', width: '6em', marginTop: 30, fontSize: 'medium', textTransform: 'none', color: 'black', borderRadius: '10px', marginRight: '1em'}}
-                        onClick={clearAll}
-                        >Clear all</Button>
-                    <Button
-                        variant="outlined"
-                        style={{height: '2.5em', width: '6em', marginTop: 30, fontSize: 'medium', textTransform: 'capitalize', color: 'white', background: global.colors.blue, borderRadius: '10px'}}
-                        onClick={() => navigate('', {state: {tags: selected, allResults: allResults, from: 'Tags'}})}
-                        >Apply</Button>
-                </div>
             </FormGroup>
         </div>
     );

@@ -38,12 +38,12 @@ function App({tags, keywords}) {
             defaultValue={keywords}
             onChange={e => handleChange(e)}
             onKeyPress={(e) => {
-              if (e.key === 'Enter') navigate("/results", {state:{phrase:phrase, tags: tags, from: 'Search'}})
+              if (e.key === 'Enter') navigate(`/results/${phrase}`, {state:{phrase:phrase, tags: tags, from: 'Search'}})
             }}
             InputProps={{
               endAdornment: (
                 <InputAdornment>
-                  <IconButton onClick={() => navigate("/results", {state:{phrase:phrase, tags: tags, from: 'Search'}})}>
+                  <IconButton onClick={() => navigate(`/results/${phrase}`, {state:{phrase:phrase, tags: tags, from: 'Search'}})}>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>

@@ -16,7 +16,7 @@ const handleInput = (e) => {
 	set_minValue(e.minValue);
 	set_maxValue(e.maxValue);
   	const filtered = list.filter(l => l.year >= minValue && l.year <= maxValue)
-  	if (minValue !== min || maxValue !== max) navigate('/results', {state:{list: list, filtered: filtered, min: minValue, max: maxValue, clicked: clicked}})
+  	// if (minValue !== min || maxValue !== max) navigate('/results', {state:{list: list, filtered: filtered, min: minValue, max: maxValue, clicked: clicked}})
 };
 
 return (
