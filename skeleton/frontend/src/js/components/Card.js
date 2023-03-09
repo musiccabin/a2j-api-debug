@@ -6,7 +6,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 // an individual insight on search results page
-function App({id, insight, title, year, url, authors, clicked, handleClick}) {
+function App({id, insight, title, year, url, authors, clicked, toggleDetails}) {
   let style = {}
   // see whether user has clicked on card
   const [cardClicked, setClick] = useState()
@@ -15,7 +15,7 @@ function App({id, insight, title, year, url, authors, clicked, handleClick}) {
     e.preventDefault()
     ref.current?.scrollIntoView({behavior: 'smooth'})
     setClick(id)
-    setParentState(e, id)
+    setParentState(id)
   }
   // // hide insight if type not selected
   // if (!typeSelected) {
@@ -34,7 +34,7 @@ function App({id, insight, title, year, url, authors, clicked, handleClick}) {
     <div>
       <Card
         style={style}
-        onClick={e => cardHandleClick(e, id, handleClick)}
+        onClick={e => cardHandleClick(e, id, toggleDetails)}
         ref={ref}>
       <Card.Body>
           <Card.Title style={{fontWeight: 450, marginBottom: '1em'}}>{insight}</Card.Title>

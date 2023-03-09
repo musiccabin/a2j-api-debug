@@ -1,5 +1,6 @@
 const global = {
     colors: {blue: '#3986FA', grey: '#f0f0f0'},
+    translation: {'Direct quotes': 0, 'Rephrased': 1, 'Any': 2},
     abstract: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed lacus dolor. Nulla egestas pellentesque porttitor. Sed molestie, metus vitae cursus tincidunt, nisl dolor mollis nibh, sed condimentum quam diam sit amet erat. Proin facilisis massa ut nulla euismod sagittis. Sed sapien nulla, rutrum in nisl ac, scelerisque lobortis leo. Morbi convallis purus vitae nulla rutrum, id elementum magna aliquam. Duis non iaculis sapien. Aenean fermentum, dolor et convallis hendrerit, risus erat feugiat magna, at ultrices leo odio et metus. Quisque dignissim suscipit felis, quis finibus lacus dictum id. Donec vehicula massa vitae tincidunt congue. Maecenas elit massa, lacinia vitae consectetur scelerisque, facilisis id risus. Aliquam ultrices ante vitae libero tempus elementum. Duis pulvinar lacus dui, et iaculis nibh egestas a. Morbi molestie leo et sem iaculis fringilla.',
     articles: [
         {

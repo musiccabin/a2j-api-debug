@@ -34,28 +34,32 @@ const SearchBox = styled(TextField)(() => ({
 // source details page
 function App() {
   const location = useLocation()
-  const article = location.state.article
+  const [insight, storeInsight] = useState(location.state.insight)
+  console.log('state', location.state)
+  const abstract = location.state.newData.abstract
+  const aiAbstract = location.state.newData.aiAbstract
+  const insights = location.state.newData.insights
 
-  const initIds = []
-  for (let i = 0; i < article.insights.length; i++) initIds.push(i)
-  const [results, setResults] = useState(initIds)
+  // const initIds = []
+  // for (let i = 0; i < article.insights.length; i++) initIds.push(i)
+  // const [results, setResults] = useState(initIds)
 
-  const searchInsights = (e) => {
-    e.preventDefault()
-    const indexes = []
-    article.insights.forEach(i => {
-      if (i.includes(e.target.value.toLowerCase())) indexes.push(article.insights.indexOf(i))
-    })
-    setResults(indexes)
-  }
+  // const searchInsights = (e) => {
+  //   e.preventDefault()
+  //   const indexes = []
+  //   article.insights.forEach(i => {
+  //     if (i.includes(e.target.value.toLowerCase())) indexes.push(article.insights.indexOf(i))
+  //   })
+  //   setResults(indexes)
+  // }
 
-  console.log('index', results)
+  // console.log('index', results)
   
   return (
     <div>
       <Header tags={location?.state?.tags}/>
       <div style={{background: 'white', display: 'flex', flexDirection: 'row'}}>
-      <MoreDetails article={article}/>
+      <MoreDetails insight={insight} abstract={abstract} aiAbstract={aiAbstract}/>
       <div style={{borderLeft: `1px solid ${global.colors.grey}`}}>
         <div style={{display: 'flex', justifyContent: 'space-between', padding: '0 2.5em', marginTop: '2em'}}>
           <p style={{fontWeight: '550', fontSize: '1.2em', marginTop: '.5em', marginBottom: '1em'}}>All insights from the source</p>
@@ -65,14 +69,14 @@ function App() {
             size="small"
             // fullWidth
             label="Search this source..."
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') searchInsights(e)
-            }}
+            // onKeyPress={(e) => {
+            //   if (e.key === 'Enter') searchInsights(e)
+            // }}
             InputProps={{
               endAdornment: (
                 <InputAdornment
                 sx={{padding: 0, margin: 0, backgroundColor: global.colors.grey, fontSize: '.2em', position: 'absolute'}}
-                onChange={e => searchInsights(e)}
+                // onChange={e => searchInsights(e)}
                 input={{fontSize: '.2em'}}
                 >
                   {/* <IconButton onClick={() => navigate("/results", {state:{phrase:phrase, tags: tags, from: 'Search'}})}> */}
@@ -84,8 +88,9 @@ function App() {
             />
           </div>
         <Grid container>
-          {article.insights.map((insight) => 
-          results.includes(article.insights.indexOf(insight)) && <SourceCard
+          {insights.map((insight) => 
+          // results.includes(article.insights.indexOf(insight)) &&
+          <SourceCard
             key={insight.id}
             insight={insight}
           />

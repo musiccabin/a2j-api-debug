@@ -10,9 +10,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { Grid } from '@mui/material'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import axios from "axios";
 
 // show details on the right when insight is selected
-function App({insight, results, list, type}) {
+function App({insight, toggleDetails, type}) {
+  const tags = insight.tags.split(',')
   const navigate = useNavigate()
   const [hidden, hideDetails] = useState(false)
 
@@ -21,12 +23,12 @@ function App({insight, results, list, type}) {
   const handleClick = (e) => {
     e.preventDefault()
     hideDetails(true)
-    navigate('', {state: {results: results, list: list, clicked: null, from: 'Details'}})
+    toggleDetails(null)
+    // navigate('', {state: {clicked: null, from: 'Details'}})
   }
   const style = hidden ? {display: 'none'} : {background: 'white', minWidth: '30vw', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1.5em', position: 'sticky', top: 0, overflow: 'scroll'}
   const circleColor = quote === 'Rephrase' ? '#84CC82' : '#FFAC1C'
-
-  const article = global.articles.find(a => a.id === insight.aid)
+  // if (global.translation[quote] !== type && !hidden) hideDetails(true)
 
   return (
     <div style={style}>
@@ -40,7 +42,13 @@ function App({insight, results, list, type}) {
             <Button
               type="button"
               style={{padding: '.5em 1em', cursor: 'pointer', borderColor: global.colors.grey, borderStyle: 'solid', borderRadius: '5px', background: 'none', textAlign: 'start'}}
-              onClick={() => navigate(`../source-details/${article.id}`, {state: {article: article}})}>
+              onClick={() => {
+                console.log('aid', insight.aid)
+                axios
+                .get(`/source-details/${insight.aid}`)
+                .then((res) => navigate(`/source-details/${insight.aid}`, {state: {insight: insight, newData: res.data}}))
+                .catch((err) => console.log(err))
+              }}>
                 <LibraryBooksIcon style={{color: global.colors.blue, verticalAlign: 'middle', marginRight: '.3em'}} />Source details
             </Button>
         </div>
@@ -51,23 +59,24 @@ function App({insight, results, list, type}) {
             <p style={{color: '#595959', fontSize: '.8em' }}>{quote}</p>
           </div>
           <Grid container spacing={1}>
-          {article.tags.map(t =>
+          {tags.map(t =>
             <Grid item>
                 <div style={{padding: '.8em', background: '#f0f0f0', borderRadius: '6px', fontSize: 'small'}}>{t}</div>        
             </Grid>)}
           </Grid>
           <p style={{color: '#595959', fontSize: '.8em', marginTop: '2em'}}>Source</p>
           <div style={{color: global.colors.blue}}>
-            <a href={article.url} style={{textDecoration: 'none', border: 'none', background: 'none', fontWeight: 700, fontSize: '.8em', padding: 0, color: global.colors.blue}}>{article.title}</a>
+            <a href={insight.url} style={{textDecoration: 'none', border: 'none', background: 'none', fontWeight: 700, fontSize: '.8em', padding: 0, color: global.colors.blue}}>{insight.title}</a>
             <OpenInNewIcon style={{marginLeft: '5px', fontSize: 'small'}} />
           </div>
           <p style={{color: '#595959', fontSize: '.8em', marginTop: '2em'}}>Date of Publication</p>
-          <p style={{fontSize: '.8em'}}>{article.date}</p>
+          <p style={{fontSize: '.8em'}}>{insight.date}</p>
           <p style={{color: '#595959', fontSize: '.8em', marginTop: '2em'}}>Location in Source</p>
           <p style={{fontSize: '.8em'}}>P.5</p>
           <p style={{color: '#595959', fontSize: '.8em', marginTop: '2em'}}>Source Authors</p>
-          <p style={{fontSize: '.8em'}}>{article.authors}</p>
-          <p style={{color: '#595959', fontSize: '.8em', marginTop: '2em'}}>Citation Unavailable</p>
+          <p style={{fontSize: '.8em'}}>{insight.authors}</p>
+          <p style={{color: '#595959', fontSize: '.8em', marginTop: '2em'}}>Citation</p>
+          <p style={{fontSize: '.8em'}}>{insight.citation}</p>
         </div>
       </div>
     </div>

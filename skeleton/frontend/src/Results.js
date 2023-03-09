@@ -31,13 +31,13 @@ function App() {
   const [close, closeDetails] = useState(false)
 
   // see whether user has clicked on any insight
-  const [clicked, setClick] = useState(location?.state?.clicked)
-  if (fromDetails && clicked !== location?.state?.clicked) setClick(location?.state?.clicked)
-  const cardClick = (e, id) => {
-    e.preventDefault()
+  const [clicked, setClick] = useState(null)
+  // if (fromDetails && clicked !== location?.state?.clicked) setClick(location?.state?.clicked)
+  const toggleDetails = (id) => {
     setClick(id)
-    if (fromDetails) location.state.from = ''
-    closeDetails(false)
+    console.log('click:', clicked, 'can find?', results.find(r => r.id === clicked))
+    // if (fromDetails) location.state.from = ''
+    // closeDetails(false)
   }
 
   // // store search or filtered results for display (except for tags)
@@ -98,7 +98,6 @@ function App() {
     //   setIds(quotedInsights + rephrasedInsights)
     //   setType(newType)
     // }
-    console.log('newtype', newType)
     setType(newType)
   }
 
@@ -115,7 +114,6 @@ function App() {
     if (start !== startYear) setStartYear(start)
     if (end !== endYear) setEndYear(end)
   }
-  console.log('start', startYear)
 
     const [results, setResults] = useState([])
     axios
@@ -182,12 +180,12 @@ function App() {
               authors={insight.authors}
               clicked={clicked === insight.id}
               // typeSelected={ids.includes(insight.id)}
-              handleClick={cardClick}
+              toggleDetails={toggleDetails}
             />
           )}
           </Grid>
         </div>}
-        {results.find(r => r.id === clicked) && !close && <Details insight={results.find(r => r.id === clicked)} results={results} list={location.state.list} type={type} />}
+        {results.find(r => r.id === clicked) && !close && <Details insight={results.find(r => r.id === clicked)} toggleDetails={toggleDetails} type={type} />}
         {numResults === 0 && <p style={{margin: '5em'}}>No results matching your search criteria...</p>}
       </div>}
       {fromSearch && numResults === 0 && <div style={{padding: '5em', backgroundColor: global.colors.grey, height: '100vh'}}>
