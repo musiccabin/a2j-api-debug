@@ -16,8 +16,8 @@ const SearchBox = styled(TextField)(() => ({
   },
 }));
 
-function App({tags, keywords}) {
-  const [phrase, setPhrase] = useState("");
+function App({phrase, tags, yearStart, yearEnd, paraphrased}) {
+  const [newPhrase, setPhrase] = useState("");
   const navigate = useNavigate()
 
   // record user input value
@@ -35,15 +35,15 @@ function App({tags, keywords}) {
             variant="outlined"
             fullWidth
             label="Type your question or keywords here"
-            defaultValue={keywords}
+            defaultValue={phrase}
             onChange={e => handleChange(e)}
             onKeyPress={(e) => {
-              if (e.key === 'Enter') navigate(`/results/${phrase}`, {state:{phrase:phrase, tags: tags, from: 'Search'}})
+              if (e.key === 'Enter') navigate(`/results/${newPhrase}/`, {state:{phrase:newPhrase, tags: tags, yearStart: yearStart, yearEnd: yearEnd, paraphrased: paraphrased, from: 'Search'}})
             }}
             InputProps={{
               endAdornment: (
                 <InputAdornment>
-                  <IconButton onClick={() => navigate(`/results/${phrase}`, {state:{phrase:phrase, tags: tags, from: 'Search'}})}>
+                  <IconButton onClick={() => navigate(`/results/${newPhrase}/`, {state:{phrase:newPhrase, tags: tags, yearStart: yearStart, yearEnd: yearEnd, paraphrased: paraphrased, from: 'Search'}})}>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>

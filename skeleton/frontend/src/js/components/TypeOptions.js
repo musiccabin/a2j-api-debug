@@ -23,22 +23,26 @@ function App({selectedType, selectType}) {
     // change button background color and determine which types are selected when clicked on the buttons (no buttons cannot be delected at the same time)
     const handleClick = (e, selection) => {
         e.preventDefault()
+        const translation = {}
+        translation[DIRECTQUOTES] = 0
+        translation[REPHRASED] = 1
+        translation[ANY] = 2
         if (selection === DIRECTQUOTES) {
-            if (selectedType === ANY)  {
-                selectedType = REPHRASED
+            if (selectedType === translation[ANY])  {
+                selectedType = translation[REPHRASED]
                 e.target.style.background = 'none'
-            } else if (selectedType === REPHRASED) {
-                selectedType = ANY
+            } else if (selectedType === translation[REPHRASED]) {
+                selectedType = translation[ANY]
                 e.target.style.background = buttonBG
             }
             selectType(selectedType)
         }
         if (selection === REPHRASED) {
-            if (selectedType === ANY)  {
-                selectedType = DIRECTQUOTES
+            if (selectedType === translation[ANY])  {
+                selectedType = translation[DIRECTQUOTES]
                 e.target.style.background = 'none'
-            } else if (selectedType === DIRECTQUOTES) {
-                selectedType = ANY
+            } else if (selectedType === translation[DIRECTQUOTES]) {
+                selectedType = translation[ANY]
                 e.target.style.background = buttonBG
             }
             selectType(selectedType)

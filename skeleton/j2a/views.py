@@ -1,10 +1,13 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from .serializers import ArticleSerializer, InsightSerializer
 from .models import Article, Insight
 
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
+
+import json
 
 # Create your views here.
 
@@ -16,24 +19,25 @@ class ArticlesViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all().order_by('id')
     serializer_class = ArticleSerializer
 
-def search_and_filter(request, prompt):
-    prompt = prompt.replace("-", " ")
-    print("Prompt: ", prompt)
+@csrf_exempt
+def search_and_filter(request, query):
+    print("query ", query, 'data', json.dumps(request.POST))
+
+    # prompt = prompt.replace("-", " ")
+    # print("Prompt: ", prompt)
 
     # if tags:
     #     tags = tags.replace("+", " ")
     #     tags = tags.split("-")
 
 
-    relevant_objects = []
-    relevant_ids = []
+    # relevant_objects = []
+    # relevant_ids = []
     # embeddings = Embeddings()
 
     # embeddings.load("./search/insights_index/")
     
     # results = embeddings.search(prompt, 1000)
-
-    results = Insight.objects.all().filter((lambda i: prompt.lower() in i.text.lower())).values()
 
     # if paraphrased:
     #     if paraphrased == 0 or paraphrased == 1:
@@ -84,21 +88,24 @@ def search_and_filter(request, prompt):
     # print(relevant_ids)
 
     results_data = []
-    for o in results:
-        results_data.append({'id': o.id, 'text': o.text, 'authors': o.article.authors, 'paraphrased': o.paraphrased, 'year': o.article.year, 'url': o.article.url})
+    for o in Insight.objects.all():
+        # print("title:", o.article.title)
+        results_data.append({'id': o.id, 'text': o.text, 'title': o.article.title, 'authors': o.article.authors, 'paraphrased': o.paraphrased, 'year': o.article.year, 'url': o.article.url})
 
     # serializer = InsightSerializer(relevant_objects, many=True)
 
     return JsonResponse(results_data, safe=False)
 
+@csrf_exempt
 def insight_details(request, article_id, insight_id):
 
     article = Article.objects.all().filter(id=article_id)[0]
     insight = Insight.objects.all().filter(id=insight_id)[0]
     # article_serializer = ArticleSerializer(article)
 
-    return JsonResponse({'id': insight.id, 'article_id': article.id, 'title': article.title, 'year': article.year, 'url': article.url, 'authors': article.authors, 'citation': article.citation, 'tags': article.tags, 'location': insight.location}, safe=False)
+    return JsonResponse({'id': insight.id, 'article': article.id, 'title': article.title, 'year': article.year, 'url': article.url, 'authors': article.authors, 'citation': article.citation, 'tags': article.tags, 'location': insight.location}, safe=False)
 
+@csrf_exempt
 def article_details(request, article_id):
 
     article = Article.objects.all().filter(id=article_id)[0]

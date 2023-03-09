@@ -82,7 +82,7 @@ function App() {
   // })
   // const [ids, setIds] = useState(quotedInsights + rephrasedInsights)
   // if (results.map(r => r.id).includes(clicked) && close && ids.includes(clicked)) closeDetails(false)
-  const [type, setType] = useState(ANY)
+  const [type, setType] = useState(2)
   const selectType = (newType) => {
     // if (newType === DIRECTQUOTES) {
     //   setIds(quotedInsights)
@@ -98,20 +98,43 @@ function App() {
     //   setIds(quotedInsights + rephrasedInsights)
     //   setType(newType)
     // }
+    console.log('newtype', newType)
     setType(newType)
   }
 
-  // // get all tags
-  // let tags = []
-  // global.articles.forEach(a => a.tags.forEach(t => tags.push(t)))
-  // tags = [...new Set(tags)]
+  // get all tags
+  let tags = []
+  global.articles.forEach(a => a.tags.forEach(t => tags.push(t)))
+  tags = [...new Set(tags)]
 
-  // const numResults = fromSearch ? results.length : results.map(r => r.id).filter(value => ids.includes(value)).length
+  const [phrase, setPhrase] = useState(location?.state?.phrase)
+  if (fromSearch && phrase !== location?.state?.phrase) setPhrase(location?.state?.phrase)
+  const [startYear, setStartYear] = useState(1950)
+  const [endYear, setEndYear] = useState(2030)
+  const changeYearRange = (start, end) => {
+    if (start !== startYear) setStartYear(start)
+    if (end !== endYear) setEndYear(end)
+  }
+  console.log('start', startYear)
 
     const [results, setResults] = useState([])
     axios
-      .post(`/results/${location.state.phrase}`, location.state.phrase)
-      .then((res) => setResults(res.data))
+      .post(`/results/${phrase}-${startYear}-${endYear}-${type}/`, `tags: ${location?.state?.tags}`
+      )
+      .then((res) => {
+        let refresh = false
+        for (let i = 0; i < res.data.length; i++) {
+          if (results.length === 0) refresh = true
+          else if (results[i] && results[i]['id'] !== res.data[i].id) {
+            refresh = true
+            break
+          } else refresh = false
+        }
+        console.log('fresh', refresh)
+        if (refresh) {
+          setResults(res.data)
+        }
+      })
       .catch((err) => console.log(err))
     
     const numResults = results.length
@@ -120,7 +143,13 @@ function App() {
   
   return (
     <div style={{background: 'white'}}>
-      <Header tags={location?.state?.tags} keywords={location?.state?.phrase}/>
+      <Header
+        phrase={phrase}
+        tags={location?.state?.tags}
+        yearStart={startYear}
+        yearEnd={endYear}
+        paraphrased={type}
+        />
       {!(numResults === 0 && fromSearch) && <div style={{display: 'flex', flexDirection: 'row', alignItems: 'flex-start'}}>
         <Grid
           item spacing={3}
@@ -135,20 +164,8 @@ function App() {
           <h4 style={{padding: '.5em',}}>Type of insight</h4>
           <TypeOptions selectedType={type} selectType={selectType} />
           <h4 style={{marginTop: '3em'}}>Year of publication</h4>
-          <Slider min={location?.state?.min || 1950} max={location?.state?.max || 2030} clicked={clicked}/>
-          {/* <Tags tags={tags}/> */}
-          <div>
-            <Button
-              variant="outlined"
-              style={{height: '2.5em', width: '6em', marginTop: 30, fontSize: 'medium', textTransform: 'none', color: 'black', borderRadius: '10px', marginRight: '1em'}}
-              // onClick={clearAll}
-              >Reset</Button>
-            <Button
-              variant="outlined"
-              style={{height: '2.5em', width: '6em', marginTop: 30, fontSize: 'medium', textTransform: 'capitalize', color: 'white', background: global.colors.blue, borderRadius: '10px'}}
-              // onClick={() => navigate('', {state: {tags: selected, allResults: allResults, from: 'Tags'}})}
-              >Apply</Button>
-          </div>
+          <Slider changeYearRange={changeYearRange}/>
+          <Tags tags={tags}/>
         </Grid>
         {numResults > 0 && <div style={{padding: '10px', backgroundColor: global.colors.grey, height: '100vh', overflow: 'scroll'}}>
           <p style={{marginLeft: 25, color: '#595959', fontSize: '.8em'}}>About {numResults} insights</p>
@@ -158,7 +175,11 @@ function App() {
               key={insight.id}
               id={insight.id}
               insight={insight.text}
-              aid={insight.aid}
+              aid={insight.article}
+              title={insight.title}
+              year={insight.year}
+              url={insight.url}
+              authors={insight.authors}
               clicked={clicked === insight.id}
               // typeSelected={ids.includes(insight.id)}
               handleClick={cardClick}
@@ -185,8 +206,8 @@ function App() {
   )
 }
 
-const DIRECTQUOTES = 'Direct quotes'
-const REPHRASED = 'Rephrased'
-const ANY = 'any'
+// const DIRECTQUOTES = 'Direct quotes'
+// const REPHRASED = 'Rephrased'
+// const ANY = 'any'
 
 export default App;

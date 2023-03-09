@@ -56,14 +56,14 @@ export default function Tags({tags, allResults}) {
         setStatus(status)
         setSelected([])
         openModal(false)
-        navigate('', {state: {tags: [], allResults: allResults, from: 'Tags'}})
+        navigate('', {state: {tags: [], from: 'Tags'}})
         console.log('stat', status)
     }
       
     return (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '3em', marginBottom: '.5em', width: '100%'}}>
-                <h4>Tags</h4>
+                <p style={{fontWeight: 600, marginTop: '.3em'}}>Tags</p>
                 <Button
                     sx={{textTransform: 'none', right: 0, height: '2.5em', marginTop: '1em'}}
                     onClick={(e) => {
@@ -134,12 +134,24 @@ export default function Tags({tags, allResults}) {
                                 style={{height: '2.5em', width: '7em', marginTop: 30, fontSize: 'medium', textTransform: 'capitalize', color: 'white', background: global.colors.blue, borderRadius: '10px'}}
                                 onClick={() => {
                                     openModal(false)
-                                    navigate('', {state: {tags: selected, allResults: allResults, from: 'Tags'}})}
+                                    navigate('', {state: {tags: selected, from: 'Tags'}})}
                             }
                                 >Apply</Button>
                         </div>
                     </div>
                 </Modal>
+                <div>
+            <Button
+              variant="outlined"
+              style={{height: '2.5em', width: '6em', marginTop: 30, fontSize: 'medium', textTransform: 'none', color: 'black', borderRadius: '10px', marginRight: '1em'}}
+              onClick={clearAll}
+              >Clear all</Button>
+            <Button
+              variant="outlined"
+              style={{height: '2.5em', width: '6em', marginTop: 30, fontSize: 'medium', textTransform: 'capitalize', color: 'white', background: global.colors.blue, borderRadius: '10px'}}
+              onClick={() => navigate('', {state: {tags: selected, from: 'Tags'}})}
+              >Apply</Button>
+          </div>
             </FormGroup>
         </div>
     );
